@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Example.Rpc\Example.Rpc.fsproj" />
+    <ProjectReference Include="..\example.rpc\example.rpc.fsproj" />
   </ItemGroup>
 
 </Project>
