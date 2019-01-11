@@ -16,18 +16,13 @@ with
         { Context = context; Inner = inner } 
             
     interface ITypeSerialisable
-        with 
-            member this.Type with get () = typeof<Request>
 
     static member JSONSerialiser 
         with get () = 
-            { new ITypeSerialiser<Request>
+            { new ITypeSerde<Request>
                 with
                     member this.TypeName =
                         "__r_request"
-    
-                    member this.Type
-                        with get () = typeof<Request>
     
                     member this.ContentType
                         with get () = "json"
@@ -70,14 +65,11 @@ with
                             
     static member BinarySerialiser 
         with get () =   
-            { new ITypeSerialiser<Request> 
+            { new ITypeSerde<Request> 
                 with 
                     member this.TypeName =
                         "__r_request"
             
-                    member this.Type 
-                        with get () = typeof<Request> 
-                       
                     member this.ContentType = 
                         "binary" 
                                                    

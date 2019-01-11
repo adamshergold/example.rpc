@@ -48,7 +48,7 @@ module ClientImpl =
                                 result
                             | _ ->
                                 let error = 
-                                    Example.Rpc.Error.Make( sprintf "Unexpected message contents on RMI call - '%O'" (ts.Type) )
+                                    Example.Rpc.Error.Make( sprintf "Unexpected message contents on RMI call - '%O'" (ts.GetType()) )
                                     
                                 Result.Make( error ) 
     

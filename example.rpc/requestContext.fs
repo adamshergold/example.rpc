@@ -25,18 +25,13 @@ with
             member this.UserId = this.UserId
             
     interface ITypeSerialisable
-        with 
-            member this.Type with get () = typeof<RequestContext>
                   
     static member JSONSerialiser 
         with get () = 
-            { new ITypeSerialiser<RequestContext>
+            { new ITypeSerde<RequestContext>
                 with
                     member this.TypeName =
                         "_r_context"
-    
-                    member this.Type
-                        with get () = typeof<RequestContext>
     
                     member this.ContentType
                         with get () = "json"
@@ -84,14 +79,11 @@ with
                                                     
     static member BinarySerialiser 
         with get () =   
-            { new ITypeSerialiser<RequestContext> 
+            { new ITypeSerde<RequestContext> 
                 with 
                     member this.TypeName =
                         "_r_context"
             
-                    member this.Type 
-                        with get () = typeof<RequestContext> 
-                       
                     member this.ContentType = 
                         "binary" 
                                                    

@@ -27,18 +27,13 @@ with
             member this.Error = this.Error.Value
             
     interface ITypeSerialisable
-        with 
-            member this.Type with get () = typeof<Result>
                  
     static member JSONSerialiser 
         with get () = 
-            { new ITypeSerialiser<Result>
+            { new ITypeSerde<Result>
                 with
                     member this.TypeName =
                         "__r_result"
-    
-                    member this.Type
-                        with get () = typeof<Result>
     
                     member this.ContentType
                         with get () = "json"
@@ -82,14 +77,11 @@ with
                                                     
     static member BinarySerialiser 
         with get () =   
-            { new ITypeSerialiser<Result> 
+            { new ITypeSerde<Result> 
                 with 
                     member this.TypeName =
                         "__r_result"
             
-                    member this.Type 
-                        with get () = typeof<Result> 
-                       
                     member this.ContentType = 
                         "binary" 
                                                    
