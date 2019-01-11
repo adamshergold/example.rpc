@@ -16,19 +16,14 @@ module Mocks =
             { Message = message } 
             
         interface ITypeSerialisable
-            with 
-                member this.Type with get () = typeof<EchoRequest>
 
         static member BinarySerialiser 
             with get () =   
-                { new ITypeSerialiser<EchoRequest> 
+                { new ITypeSerde<EchoRequest> 
                     with 
                         member this.TypeName =
                             "EchoRequest"
                 
-                        member this.Type 
-                            with get () = typeof<EchoRequest> 
-                           
                         member this.ContentType = 
                             "binary" 
                                                        
@@ -52,13 +47,10 @@ module Mocks =
                         
         static member JSONSerialiser 
             with get () = 
-                { new ITypeSerialiser<EchoRequest>
+                { new ITypeSerde<EchoRequest>
                     with
                         member this.TypeName =
                             "EchoRequest"
-        
-                        member this.Type
-                            with get () = typeof<EchoRequest>
         
                         member this.ContentType
                             with get () = "json"
@@ -101,18 +93,13 @@ module Mocks =
             { Reply = reply } 
             
         interface ITypeSerialisable
-            with 
-                member this.Type with get () = typeof<EchoResult>
 
         static member JSONSerialiser 
             with get () = 
-                { new ITypeSerialiser<EchoResult>
+                { new ITypeSerde<EchoResult>
                     with
                         member this.TypeName =
                             "EchoResult"
-        
-                        member this.Type
-                            with get () = typeof<EchoResult>
         
                         member this.ContentType
                             with get () = "json"
@@ -156,18 +143,13 @@ module Mocks =
             { Name = name } 
             
         interface ITypeSerialisable
-            with 
-                member this.Type with get () = typeof<GreetingRequest>
 
         static member JSON_Serialiser 
             with get () = 
-                { new ITypeSerialiser<GreetingRequest>
+                { new ITypeSerde<GreetingRequest>
                     with
                         member this.TypeName =
                             "GreetingRequest"
-        
-                        member this.Type
-                            with get () = typeof<GreetingRequest>
         
                         member this.ContentType
                             with get () = "json"
@@ -204,13 +186,10 @@ module Mocks =
 
         static member Binary_Serialiser 
             with get () = 
-                { new ITypeSerialiser<GreetingRequest>
+                { new ITypeSerde<GreetingRequest>
                     with
                         member this.TypeName =
                             "GreetingRequest"
-        
-                        member this.Type
-                            with get () = typeof<GreetingRequest>
         
                         member this.ContentType
                             with get () = "binary"
@@ -245,18 +224,13 @@ module Mocks =
             { Salutation = salutation } 
             
         interface ITypeSerialisable
-            with 
-                member this.Type with get () = typeof<GreetingResult>
 
         static member JSONSerialiser 
             with get () = 
-                { new ITypeSerialiser<GreetingResult>
+                { new ITypeSerde<GreetingResult>
                     with
                         member this.TypeName =
                             "GreetingResult"
-        
-                        member this.Type
-                            with get () = typeof<GreetingResult>
         
                         member this.ContentType
                             with get () = "json"
@@ -291,39 +265,4 @@ module Mocks =
         
                             result }      
                             
-//        static member Binary_Serialiser 
-//            with get () = 
-//                { new ITypeSerialiser<GreetingResult>
-//                    with
-//                        member this.TypeName =
-//                            "GreetingResult"
-//        
-//                        member this.Type
-//                            with get () = typeof<GreetingResult>
-//        
-//                        member this.ContentType
-//                            with get () = "binary"
-//        
-//                        member this.Serialise (serialiser:ISerde) (stream:ISerdeStream) (v:GreetingResult) =
-//        
-//                            use bs =
-//                                BinarySerialiser.Make( serialiser, stream, this.TypeName, Some this.ContentType )
-//
-//                            bs.Write v.Salutation           
-//        
-//                        member this.Deserialise (serialiser:ISerde) (stream:ISerdeStream) =
-//        
-//                            use bds =
-//                                BinaryDeserialiser.Make( serialiser, stream, Some this.ContentType )
-//        
-//                            bds.Start( this.TypeName )
-//                            
-//                            let salutation = 
-//                                bds.ReadString()
-//                            
-//                            let result =
-//                                {
-//                                    Salutation = salutation
-//                                }
-//        
-//                            result }                                                  
+                                     

@@ -37,19 +37,13 @@ with
             member this.Wrapped = this.WrappedValue.Value
             
     interface ITypeSerialisable
-        with
-            member this.Type
-                with get () = typeof<Content>
     
     static member JSON_Serialiser 
         with get () = 
-            { new ITypeSerialiser<Content>
+            { new ITypeSerde<Content>
                 with
                     member this.TypeName =
                         "__r_content"
-    
-                    member this.Type
-                        with get () = typeof<Content>
     
                     member this.ContentType
                         with get () = "json"
@@ -74,12 +68,12 @@ with
                               
                             let wv = v.Wrapped.Value 
                               
-                            if wv.ContentType.IsSome then  
-                                js.WriteProperty "ContentType"
-                                js.WriteValue wv.ContentType.Value
+                            js.WriteProperty "ContentType"
+                            js.WriteValue wv.ContentType
                             
-                            js.WriteProperty "TypeName"
-                            js.WriteValue wv.TypeName
+                            if wv.TypeName.IsSome then
+                                js.WriteProperty "TypeName"
+                                js.WriteValue wv.TypeName.Value
                             
                             js.WriteProperty "Body"
                             js.WriteValue wv.Body
@@ -107,10 +101,10 @@ with
                                         jds.Handlers.TryItem<_>( "Wrapped" ).Value
                                     
                                     let contentType = 
-                                        match v.TryGetValue "ContentType" with | true, v -> Some v | false, _ -> None
+                                        v.Item("ContentType")
                                         
-                                    let typeName = 
-                                        v.Item("TypeName")
+                                    let typeName =
+                                        v.TryFind "TypeName" 
                                              
                                     let body = 
                                         v.Item("Body") |> System.Text.Encoding.UTF8.GetBytes
@@ -125,14 +119,11 @@ with
                         
     static member BinarySerialiser 
         with get () =   
-            { new ITypeSerialiser<Content> 
+            { new ITypeSerde<Content> 
                 with 
                     member this.TypeName =
                         "__r_content"
             
-                    member this.Type 
-                        with get () = typeof<Content> 
-                       
                     member this.ContentType = 
                         "binary" 
                                                    
@@ -147,11 +138,11 @@ with
                             let tw = 
                                 Helpers.Wrap serialiser v.SerialisableValue.Value [ "binary"; "json" ] 
 
-                            bs.Write( tw.ContentType.IsSome )
-                            if tw.ContentType.IsSome then 
-                                bs.Write( tw.ContentType.Value )
+                            bs.Write( tw.ContentType )
                                 
-                            bs.Write( tw.TypeName )
+                            bs.Write( tw.TypeName.IsSome )
+                            if tw.TypeName.IsSome then 
+                                bs.Write( tw.TypeName.Value )
                             
                             bs.Write( (int32) tw.Body.Length )
                             bs.Write( tw.Body )
@@ -160,11 +151,10 @@ with
                         if v.WrappedValue.IsSome then
                             let wv = v.WrappedValue.Value
                              
-                            bs.Write wv.ContentType.IsSome
-                            if wv.ContentType.IsSome then 
-                                bs.Write wv.ContentType.Value 
-                            
-                            bs.Write wv.TypeName
+                            bs.Write wv.ContentType
+
+                            if wv.TypeName.IsSome then                            
+                                bs.Write wv.TypeName.Value
                             
                             bs.Write( (int32) wv.Body.Length )
                             bs.Write wv.Body    
@@ -176,12 +166,12 @@ with
 
                         let serialisableValue = 
                             if bds.ReadBool() then
-                            
+                               
                                let contentType = 
-                                   if bds.ReadBool() then Some( bds.ReadString() ) else None
-                                    
-                               let typeName = 
                                    bds.ReadString()
+                            
+                               let typeName = 
+                                   if bds.ReadBool() then Some( bds.ReadString() ) else None
                                    
                                let body = 
                                    bds.ReadBytes( bds.ReadInt32() )
@@ -189,19 +179,19 @@ with
                                let tw = 
                                    TypeWrapper.Make( contentType, typeName, body ) 
   
-                               Some( Helpers.Unwrap serialiser tw :?> ITypeSerialisable ) 
-                                //Some( bds.ReadSerialisable() ) 
+                               Some( Helpers.Unwrap serialiser tw :?> ITypeSerialisable )
+                               
                             else 
                                 None 
 
                         let wrappedValue = 
                             if bds.ReadBool() then
-                            
+                                
                                 let contentType = 
-                                    if bds.ReadBool() then Some( bds.ReadString() ) else None
-                                    
-                                let typeName = 
                                     bds.ReadString()
+                            
+                                let typeName = 
+                                    if bds.ReadBool() then Some( bds.ReadString() ) else None
                                     
                                 let body =
                                     let n = bds.ReadInt32()

@@ -22,18 +22,13 @@ with
             member this.Retryable = this.Retryable
             
     interface ITypeSerialisable
-        with 
-            member this.Type with get () = typeof<Error>
                  
     static member JSONSerialiser 
         with get () = 
-            { new ITypeSerialiser<Error>
+            { new ITypeSerde<Error>
                 with
                     member this.TypeName =
                         "__r_error"
-    
-                    member this.Type
-                        with get () = typeof<Error>
     
                     member this.ContentType
                         with get () = "json"
@@ -75,14 +70,11 @@ with
                                                     
     static member BinarySerialiser 
         with get () =   
-            { new ITypeSerialiser<Error> 
+            { new ITypeSerde<Error> 
                 with 
                     member this.TypeName =
                         "__r_error"
             
-                    member this.Type 
-                        with get () = typeof<Error> 
-                       
                     member this.ContentType = 
                         "binary" 
                                                    

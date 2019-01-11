@@ -58,7 +58,7 @@ type SuccessShould( oh: ITestOutputHelper ) =
             Helpers.DefaultSerde 
                         
         let sutRT = 
-            Helpers.RoundTrip (Some contentType) serialiser sut
+            Helpers.RoundTrip contentType serialiser sut
             
         Assert.Equal( sutRT, sut )                      
                          

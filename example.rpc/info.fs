@@ -16,18 +16,13 @@ with
             member this.ElapsedTimeMilliseconds = this.ElapsedTimeMilliseconds
             
     interface ITypeSerialisable
-        with 
-            member this.Type with get () = typeof<Info>
             
     static member JSONSerialiser 
         with get () = 
-            { new ITypeSerialiser<Info>
+            { new ITypeSerde<Info>
                 with
                     member this.TypeName =
                         "__r_info"
-    
-                    member this.Type
-                        with get () = typeof<Info>
     
                     member this.ContentType
                         with get () = "json"
@@ -65,13 +60,10 @@ with
                                                     
     static member BinarySerialiser 
         with get () =   
-            { new ITypeSerialiser<Info> 
+            { new ITypeSerde<Info> 
                 with 
                     member this.TypeName =
                         "__r_info"
-            
-                    member this.Type 
-                        with get () = typeof<Info> 
                        
                     member this.ContentType = 
                         "binary" 

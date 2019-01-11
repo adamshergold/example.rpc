@@ -45,18 +45,13 @@ with
             member this.Info = this.Info
             
     interface ITypeSerialisable
-        with 
-            member this.Type with get () = typeof<Success>
                  
     static member JSONSerialiser 
         with get () = 
-            { new ITypeSerialiser<Success>
+            { new ITypeSerde<Success>
                 with
                     member this.TypeName =
                         "__r_success"
-    
-                    member this.Type
-                        with get () = typeof<Success>
     
                     member this.ContentType
                         with get () = "json"
@@ -100,14 +95,11 @@ with
                                                     
     static member BinarySerialiser 
         with get () =   
-            { new ITypeSerialiser<Success> 
+            { new ITypeSerde<Success> 
                 with 
                     member this.TypeName =
                         "__r_success"
             
-                    member this.Type 
-                        with get () = typeof<Success> 
-                       
                     member this.ContentType = 
                         "binary" 
                                                    
@@ -136,26 +128,5 @@ with
                             if bds.ReadBool() then Some( bds.ReadInterface<_>() ) else None 
                                 
                         { Content = content; Info = info } }                
-        
-//type SuccessT<'T when 'T :> ITypeSerialisable>( content: 'T, info: IRpcInfo option ) =
-//
-//    member val Content = content 
-//    
-//    member val Info = info 
-//with 
-//    static member Make( content, info ) =  
-//        new SuccessT<_>( content, info ) :> IRpcSuccess<_>
-//
-//    static member Make( content ) =  
-//        new SuccessT<_>( content, None ) :> IRpcSuccess<_>
-//            
-//    interface IRpcSuccess 
-//        with 
-//            member this.Content = this.Content :> ITypeSerialisable
-//            
-//            member this.Info = this.Info 
-//                     
-//    interface IRpcSuccess<'T>
-//        with 
-//            member this.Content = this.Content
+       
 

@@ -18,7 +18,6 @@ module Helpers =
             Serde.Make( options )
             
         serde.TryRegisterAssembly typeof<Envelope>.Assembly |> ignore
-        //serde.TryRegisterAssembly typeof<BinaryProxy>.Assembly |> ignore
         serde.TryRegisterAssembly typeof<JsonProxy>.Assembly |> ignore
         serde.TryRegisterAssembly typeof<Example.Rpc.RequestContext>.Assembly |> ignore
         serde.TryRegisterAssembly typeof<Mocks.EchoRequest>.Assembly |> ignore
@@ -28,7 +27,7 @@ module Helpers =
     let DefaultSerde = 
         Serde() 
                 
-    let RoundTrip (contentType:string option) (serialiser:ISerde) (v:obj) = 
+    let RoundTrip (contentType:string) (serde:ISerde) (v:obj) = 
     
         let ts = 
             match v with 
@@ -36,9 +35,15 @@ module Helpers =
             | _ -> failwithf "Provided type did not implement ITypeSerialisable"
             
         let bytes = 
-            Example.Serialisation.Helpers.Serialise serialiser contentType v 
+            Example.Serialisation.Helpers.Serialise serde contentType v 
         
-        let typeName = 
-            serialiser.TypeName contentType ts.Type 
+        let typeSerde =
+            serde.TrySerdeBySystemType (contentType,v.GetType())
             
-        Example.Serialisation.Helpers.Deserialise serialiser contentType typeName bytes
+        if typeSerde.IsNone then
+            failwithf "Unable to find type-serde for '%O'" (v.GetType())
+            
+        let typeName =
+            typeSerde.Value.TypeName
+                
+        Example.Serialisation.Helpers.Deserialise serde contentType typeName bytes
