@@ -87,7 +87,7 @@ with
                         use jds =
                             JsonDeserialiser.Make( serialiser, stream, this.ContentType, this.TypeName )
     
-                        jds.Handlers.On "Value" ( jds.ReadSerialisable )
+                        jds.Handlers.On "Value" ( jds.ReadITypeSerialisable )
                         jds.Handlers.On "Wrapped" ( jds.ReadMap<string>( jds.ReadString ) )
     
                         jds.Deserialise()

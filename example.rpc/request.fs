@@ -50,7 +50,7 @@ with
                             JsonDeserialiser.Make( serialiser, stream, this.ContentType, this.TypeName )
     
                         jds.Handlers.On "Context" ( jds.ReadRecord "RequestContext" )
-                        jds.Handlers.On "Inner" ( jds.ReadSerialisable )                                                    
+                        jds.Handlers.On "Inner" ( jds.ReadITypeSerialisable )                                                    
     
                         jds.Deserialise()
     
@@ -91,6 +91,6 @@ with
                             bds.ReadRecord<_>()
                             
                         let inner = 
-                            bds.ReadSerialisable()                                
+                            bds.ReadITypeSerialisable()                                
                             
                         Request.Make( context, inner ) }
